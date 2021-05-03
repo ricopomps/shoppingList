@@ -6,17 +6,25 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Keyboard,
+  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import Item from "./components/Item";
 export default function App() {
   const [item, setItem] = useState();
-  const [listaItems, setListaItems] = useState([]);
+  const [listaItems, setListaItems] = useState([{ text: "", quantity: 0 }]);
 
   const handleAddItem = () => {
     Keyboard.dismiss();
-    setListaItems([...listaItems, item]);
+    setListaItems([...listaItems, { text: item, quantity: 0 }]);
     setItem(null);
+  };
+
+  const add = (index) => {
+    let itemsCopy = [...listaItems];
+    itemsCopy[index]++;
+    setListaItems(itemsCopy);
+    console.log("oi");
   };
 
   const deleteItem = (index) => {
@@ -30,13 +38,20 @@ export default function App() {
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}>Feira</Text>
         <View style={styles.items}>
-          {listaItems.map((item, index) => {
-            return (
-              <TouchableOpacity onPress={() => deleteItem(index)}>
-                <Item key={index} text={item} />
-              </TouchableOpacity>
-            );
-          })}
+          <ScrollView>
+            {listaItems.map((item, index) => {
+              return (
+                <TouchableOpacity onPress={() => deleteItem(index)}>
+                  <Item
+                    key={index}
+                    text={item.text}
+                    add={() => deleteItem(index)}
+                    quantity={item.quantity}
+                  />
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
         </View>
       </View>
 
